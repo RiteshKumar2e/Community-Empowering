@@ -1,190 +1,174 @@
-import React, { useState, useEffect } from 'react';
-import { motion, useSpring, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
 
 const ParticleCursor = () => {
-    const [hoverType, setHoverType] = useState('default');
-    const [isClicked, setIsClicked] = useState(false);
+    const canvasRef = useRef(null);
     const [isDarkMode, setIsDarkMode] = useState(true);
-
-    // Mouse coordinates
-    const mouseX = useMotionValue(-100);
-    const mouseY = useMotionValue(-100);
-
-    // Advanced Spring Physics for "Aerodynamic" movement
-    const config = { damping: 25, stiffness: 250, mass: 0.5 };
-    const springX = useSpring(mouseX, config);
-    const springY = useSpring(mouseY, config);
-
-    // Calculate Velocity/Direction for the "Stretch" effect
-    const [direction, setDirection] = useState(0);
-    const [stretch, setStretch] = useState(1);
+    const mouse = useRef({ x: -100, y: -100 });
+    const particles = useRef([]);
+    const corePos = useRef({ x: -100, y: -100 });
 
     useEffect(() => {
-        let lastX = 0;
-        let lastY = 0;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        let animationFrameId;
 
-        const moveMouse = (e) => {
-            const dx = e.clientX - lastX;
-            const dy = e.clientY - lastY;
-            const speed = Math.sqrt(dx * dx + dy * dy);
-
-            // Calculate rotation angle in degrees
-            const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-
-            setDirection(angle);
-            setStretch(1 + Math.min(speed / 50, 1.5)); // Stretch max 1.5x
-
-            mouseX.set(e.clientX);
-            mouseY.set(e.clientY);
-
-            lastX = e.clientX;
-            lastY = e.clientY;
+        const resize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         };
 
-        const handleOver = (e) => {
-            const target = e.target.closest('a, button, .clickable, input, select');
-            setHoverType(target ? 'hover' : 'default');
+        const createParticle = (x, y, isClick = false) => {
+            const count = isClick ? 25 : 1;
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 1.5 + 0.2;
+                particles.current.push({
+                    x,
+                    y,
+                    // Orbital velocity components
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    // Angular velocity for the 'vortex' feel
+                    angle: Math.random() * Math.PI * 2,
+                    angularVel: (Math.random() - 0.5) * 0.05,
+                    radius: Math.random() * 20 + 5,
+
+                    size: Math.random() * 8 + 3,
+                    color: Math.random() > 0.6
+                        ? (isDarkMode ? '#00eeff' : '#6366f1')
+                        : (Math.random() > 0.4 ? '#ffffff' : (isDarkMode ? '#ff00ff' : '#db2777')),
+                    life: 1,
+                    decay: Math.random() * 0.01 + 0.005,
+                });
+            }
         };
+
+        const update = () => {
+            // Spring for core
+            corePos.current.x += (mouse.current.x - corePos.current.x) * 0.15;
+            corePos.current.y += (mouse.current.y - corePos.current.y) * 0.15;
+
+            // Constantly emit a few particles
+            if (Math.random() > 0.2) {
+                createParticle(corePos.current.x, corePos.current.y);
+            }
+
+            for (let i = 0; i < particles.current.length; i++) {
+                const p = particles.current[i];
+
+                // Vortex physics
+                p.angle += p.angularVel;
+                const orbitX = Math.cos(p.angle) * p.radius * (1 - p.life);
+                const orbitY = Math.sin(p.angle) * p.radius * (1 - p.life);
+
+                p.x += p.vx + orbitX * 0.1;
+                p.y += p.vy + orbitY * 0.1;
+
+                p.life -= p.decay;
+
+                if (p.life <= 0) {
+                    particles.current.splice(i, 1);
+                    i--;
+                }
+            }
+        };
+
+        const draw = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Connection lines (The 'Unique' Neural aspect)
+            // Only connect the most recent/alive particles to keep performance high
+            ctx.beginPath();
+            ctx.strokeStyle = isDarkMode ? 'rgba(0, 238, 255, 0.15)' : 'rgba(99, 102, 241, 0.1)';
+            ctx.lineWidth = 0.5;
+            const recentParticles = particles.current.slice(-15);
+            recentParticles.forEach(p => {
+                const dist = Math.hypot(p.x - corePos.current.x, p.y - corePos.current.y);
+                if (dist < 100) {
+                    ctx.moveTo(corePos.current.x, corePos.current.y);
+                    ctx.lineTo(p.x, p.y);
+                }
+            });
+            ctx.stroke();
+
+            // 2. Main Glow (Core)
+            ctx.globalCompositeOperation = 'lighter';
+            const coreGradient = ctx.createRadialGradient(
+                corePos.current.x, corePos.current.y, 0,
+                corePos.current.x, corePos.current.y, 30
+            );
+            const primaryColor = isDarkMode ? '#00eeff' : '#6366f1';
+            coreGradient.addColorStop(0, '#ffffff');
+            coreGradient.addColorStop(0.3, primaryColor);
+            coreGradient.addColorStop(1, 'transparent');
+
+            ctx.fillStyle = coreGradient;
+            ctx.beginPath();
+            ctx.arc(corePos.current.x, corePos.current.y, 40, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 3. Particles
+            particles.current.forEach(p => {
+                ctx.beginPath();
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            ctx.globalCompositeOperation = 'source-over';
+        };
+
+        const loop = () => {
+            update();
+            draw();
+            animationFrameId = requestAnimationFrame(loop);
+        };
+
+        const handleMouseMove = (e) => {
+            mouse.current.x = e.clientX;
+            mouse.current.y = e.clientY;
+        };
+
+        const handleMouseDown = () => createParticle(mouse.current.x, mouse.current.y, true);
 
         const checkTheme = () => {
             setIsDarkMode(!document.body.classList.contains('light-theme'));
         };
 
-        window.addEventListener('mousemove', moveMouse);
-        window.addEventListener('mouseover', handleOver);
-        window.addEventListener('mousedown', () => setIsClicked(true));
-        window.addEventListener('mouseup', () => setIsClicked(false));
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mousedown', handleMouseDown);
 
         const observer = new MutationObserver(checkTheme);
         observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+        resize();
+        loop();
         checkTheme();
 
         return () => {
-            window.removeEventListener('mousemove', moveMouse);
-            window.removeEventListener('mouseover', handleOver);
+            window.removeEventListener('resize', resize);
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mousedown', handleMouseDown);
             observer.disconnect();
+            cancelAnimationFrame(animationFrameId);
         };
-    }, [mouseX, mouseY]);
-
-    const isHovered = hoverType !== 'default';
-    const primary = isDarkMode ? '#0ff' : '#6366f1';
+    }, [isDarkMode]);
 
     return (
-        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', z_index: 99999 }}>
-
-            {/* 1. THE LIQUID LENS (The attractive "Glass" effect) */}
-            <motion.div
-                style={{
-                    position: 'absolute',
-                    left: springX,
-                    top: springY,
-                    x: '-50%',
-                    y: '-50%',
-                    width: 32,
-                    height: 32,
-                    borderRadius: '50%',
-                    // Unique "Frosted Glass" interaction
-                    backdropFilter: 'blur(4px) saturate(180%) brightness(1.2)',
-                    border: `1.5px solid ${primary}44`,
-                    backgroundColor: isDarkMode ? 'rgba(0, 255, 255, 0.05)' : 'rgba(99, 102, 241, 0.05)',
-                    rotate: direction,
-                }}
-                animate={{
-                    scaleX: isClicked ? 0.8 : isHovered ? 2.5 : stretch,
-                    scaleY: isClicked ? 0.8 : isHovered ? 2.5 : 1 / (stretch * 0.5 + 0.5), // Conservation of mass feel
-                    borderRadius: isHovered ? '30%' : '50%',
-                    borderColor: isHovered ? `${primary}aa` : `${primary}44`,
-                }}
-                transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-            />
-
-            {/* 2. THE CHRONO AURA (Subtle trailing glow) */}
-            <motion.div
-                style={{
-                    position: 'absolute',
-                    left: springX,
-                    top: springY,
-                    x: '-50%',
-                    y: '-50%',
-                    width: 80,
-                    height: 80,
-                    background: `radial-gradient(circle, ${primary}11 0%, transparent 70%)`,
-                    borderRadius: '50%',
-                    opacity: 0.4,
-                }}
-                animate={{
-                    scale: isHovered ? 1.5 : 1,
-                }}
-            />
-
-            {/* 3. THE PRECISION CORE (The tiny sharp point) */}
-            <motion.div
-                style={{
-                    position: 'absolute',
-                    left: mouseX,
-                    top: mouseY,
-                    x: '-50%',
-                    y: '-50%',
-                    width: 4,
-                    height: 4,
-                    backgroundColor: primary,
-                    borderRadius: '50%',
-                    boxShadow: `0 0 10px ${primary}`,
-                }}
-                animate={{
-                    scale: isClicked ? 2 : isHovered ? 0 : 1,
-                    opacity: isHovered ? 0 : 1,
-                }}
-            />
-
-            {/* 4. SPEED TAIL (Unique kinetic detail) */}
-            <AnimatePresence>
-                {!isHovered && stretch > 1.2 && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.3 }}
-                        exit={{ opacity: 0 }}
-                        style={{
-                            position: 'absolute',
-                            left: springX,
-                            top: springY,
-                            x: '-50%',
-                            y: '-50%',
-                            width: 2,
-                            height: 40,
-                            backgroundColor: primary,
-                            rotate: direction - 90, // Points in direction of move
-                            transformOrigin: 'bottom center',
-                        }}
-                    />
-                )}
-            </AnimatePresence>
-
-            {/* 5. INTERACTION RING (Only on click/hover) */}
-            <motion.div
-                style={{
-                    position: 'absolute',
-                    left: springX,
-                    top: springY,
-                    x: '-50%',
-                    y: '-50%',
-                    width: 50,
-                    height: 50,
-                    border: `1px dashed ${primary}66`,
-                    borderRadius: '50%',
-                    opacity: isHovered ? 1 : 0,
-                }}
-                animate={{
-                    rotate: 360,
-                    scale: isHovered ? 1.4 : 0.8,
-                }}
-                transition={{
-                    rotate: { duration: 10, repeat: Infinity, ease: 'linear' },
-                    default: { type: 'spring' }
-                }}
-            />
-
-        </div>
+        <canvas
+            ref={canvasRef}
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                pointerEvents: 'none',
+                zIndex: 99999,
+                width: '100vw',
+                height: '100vh'
+            }}
+        />
     );
 };
 
