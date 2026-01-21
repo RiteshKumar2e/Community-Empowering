@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pydantic import validator
 from typing import List
 
 class Settings(BaseSettings):
@@ -19,6 +20,17 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5173",
         "https://community-empower.vercel.app"
     ]
+
+    @validator("ALLOWED_ORIGINS", pre=True)
+    def assemble_cors_origins(cls, v: any) -> List[str]:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            import json
+            if isinstance(v, str):
+                return json.loads(v)
+            return v
+        return v
     
     # Database
     DATABASE_URL: str = "postgresql://postgres:password@localhost:5432/community_ai"
