@@ -1,64 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useSpring, useMotionValue } from 'framer-motion';
+import { motion, useSpring, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
 
 const ParticleCursor = () => {
-    const [isHovered, setIsHovered] = useState(false);
+    const [hoverType, setHoverType] = useState('default');
     const [isClicked, setIsClicked] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(true);
-    const [stats, setStats] = useState({ x: 0, y: 0, speed: 0 });
 
-    // Core Motion Values
+    // Mouse coordinates
     const mouseX = useMotionValue(-100);
     const mouseY = useMotionValue(-100);
 
-    // Spring physics for the "Floating HUD"
-    const springConfig = { damping: 25, stiffness: 200, mass: 0.5 };
-    const springX = useSpring(mouseX, springConfig);
-    const springY = useSpring(mouseY, springConfig);
+    // Advanced Spring Physics for "Aerodynamic" movement
+    const config = { damping: 25, stiffness: 250, mass: 0.5 };
+    const springX = useSpring(mouseX, config);
+    const springY = useSpring(mouseY, config);
+
+    // Calculate Velocity/Direction for the "Stretch" effect
+    const [direction, setDirection] = useState(0);
+    const [stretch, setStretch] = useState(1);
 
     useEffect(() => {
         let lastX = 0;
         let lastY = 0;
-        let lastTime = Date.now();
 
         const moveMouse = (e) => {
-            const now = Date.now();
-            const dt = now - lastTime;
             const dx = e.clientX - lastX;
             const dy = e.clientY - lastY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            const speed = Math.round((distance / Math.max(dt, 1)) * 100);
+            const speed = Math.sqrt(dx * dx + dy * dy);
+
+            // Calculate rotation angle in degrees
+            const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+            setDirection(angle);
+            setStretch(1 + Math.min(speed / 50, 1.5)); // Stretch max 1.5x
 
             mouseX.set(e.clientX);
             mouseY.set(e.clientY);
 
-            // Only update state for text every 2 frames for performance
-            if (now % 2 === 0) {
-                setStats({ x: e.clientX, y: e.clientY, speed });
-            }
-
             lastX = e.clientX;
             lastY = e.clientY;
-            lastTime = now;
+        };
+
+        const handleOver = (e) => {
+            const target = e.target.closest('a, button, .clickable, input, select');
+            setHoverType(target ? 'hover' : 'default');
         };
 
         const checkTheme = () => {
             setIsDarkMode(!document.body.classList.contains('light-theme'));
         };
 
-        const observer = new MutationObserver(checkTheme);
-        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-
         window.addEventListener('mousemove', moveMouse);
+        window.addEventListener('mouseover', handleOver);
         window.addEventListener('mousedown', () => setIsClicked(true));
         window.addEventListener('mouseup', () => setIsClicked(false));
 
-        const handleOver = (e) => {
-            if (e.target.closest('a, button, .clickable, input, select')) setIsHovered(true);
-            else setIsHovered(false);
-        };
-        window.addEventListener('mouseover', handleOver);
-
+        const observer = new MutationObserver(checkTheme);
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
         checkTheme();
 
         return () => {
@@ -66,69 +64,60 @@ const ParticleCursor = () => {
             window.removeEventListener('mouseover', handleOver);
             observer.disconnect();
         };
-    }, []);
+    }, [mouseX, mouseY]);
 
-    // Theme-based Styles
-    const theme = {
-        primary: isDarkMode ? '#0ff' : '#6366f1',
-        secondary: isDarkMode ? '#f0f' : '#ec4899',
-        text: isDarkMode ? '#fff' : '#0f172a',
-        bg: isDarkMode ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.8)',
-        border: isDarkMode ? 'rgba(0, 255, 255, 0.3)' : 'rgba(99, 102, 241, 0.3)'
-    };
+    const isHovered = hoverType !== 'default';
+    const primary = isDarkMode ? '#0ff' : '#6366f1';
 
     return (
-        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 99999 }}>
+        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', z_index: 99999 }}>
 
-            {/* 1. The HUD Glass Label (Trailing Info Tag) */}
+            {/* 1. THE LIQUID LENS (The attractive "Glass" effect) */}
             <motion.div
                 style={{
                     position: 'absolute',
-                    x: springX,
-                    y: springY,
-                    translateX: 25,
-                    translateY: -55,
-                    padding: '6px 10px',
-                    background: theme.bg,
-                    backdropFilter: 'blur(10px)',
-                    border: `1px solid ${theme.border}`,
-                    borderRadius: '4px',
-                    color: theme.text,
-                    fontSize: '9px',
-                    fontFamily: '"Montserrat", monospace',
-                    fontWeight: 600,
-                    letterSpacing: '1px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '2px',
-                    boxShadow: isDarkMode ? `0 0 20px rgba(0, 255, 255, 0.1)` : '0 4px 15px rgba(0,0,0,0.1)'
+                    left: springX,
+                    top: springY,
+                    x: '-50%',
+                    y: '-50%',
+                    width: 32,
+                    height: 32,
+                    borderRadius: '50%',
+                    // Unique "Frosted Glass" interaction
+                    backdropFilter: 'blur(4px) saturate(180%) brightness(1.2)',
+                    border: `1.5px solid ${primary}44`,
+                    backgroundColor: isDarkMode ? 'rgba(0, 255, 255, 0.05)' : 'rgba(99, 102, 241, 0.05)',
+                    rotate: direction,
                 }}
                 animate={{
-                    opacity: isHovered ? 0 : 1,
-                    scale: isClicked ? 0.9 : 1,
-                    skewX: stats.speed / 10, // Dynamic distortion based on speed
+                    scaleX: isClicked ? 0.8 : isHovered ? 2.5 : stretch,
+                    scaleY: isClicked ? 0.8 : isHovered ? 2.5 : 1 / (stretch * 0.5 + 0.5), // Conservation of mass feel
+                    borderRadius: isHovered ? '30%' : '50%',
+                    borderColor: isHovered ? `${primary}aa` : `${primary}44`,
                 }}
-            >
-                <div>NEURAL_INT: {stats.speed}%</div>
-                <div style={{ opacity: 0.6, fontSize: '7px' }}>X_{stats.x} Y_{stats.y}</div>
-            </motion.div>
+                transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+            />
 
-            {/* 2. The Dynamic Connector Line */}
+            {/* 2. THE CHRONO AURA (Subtle trailing glow) */}
             <motion.div
                 style={{
                     position: 'absolute',
-                    width: 1,
-                    height: 40,
-                    x: springX,
-                    y: springY,
-                    translateX: 25,
-                    translateY: -30,
-                    background: `linear-gradient(to bottom, ${theme.primary}, transparent)`,
-                    opacity: isHovered ? 0 : 0.5,
+                    left: springX,
+                    top: springY,
+                    x: '-50%',
+                    y: '-50%',
+                    width: 80,
+                    height: 80,
+                    background: `radial-gradient(circle, ${primary}11 0%, transparent 70%)`,
+                    borderRadius: '50%',
+                    opacity: 0.4,
+                }}
+                animate={{
+                    scale: isHovered ? 1.5 : 1,
                 }}
             />
 
-            {/* 3. The Precision Crosshair Core */}
+            {/* 3. THE PRECISION CORE (The tiny sharp point) */}
             <motion.div
                 style={{
                     position: 'absolute',
@@ -136,52 +125,62 @@ const ParticleCursor = () => {
                     top: mouseY,
                     x: '-50%',
                     y: '-50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}
-            >
-                {/* Horizontal Bar */}
-                <motion.div style={{ width: 22, height: 1, backgroundColor: theme.primary }}
-                    animate={{ width: isHovered ? 40 : 22, opacity: isHovered ? 0.2 : 1 }}
-                />
-                {/* Vertical Bar */}
-                <motion.div style={{ width: 1, height: 22, backgroundColor: theme.primary, position: 'absolute' }}
-                    animate={{ height: isHovered ? 40 : 22, opacity: isHovered ? 0.2 : 1 }}
-                />
-                {/* Center Pulse */}
-                <motion.div
-                    style={{
-                        width: 4, height: 4,
-                        backgroundColor: theme.secondary,
-                        borderRadius: '1px',
-                        position: 'absolute',
-                        boxShadow: `0 0 10px ${theme.secondary}`
-                    }}
-                    animate={{ rotate: 45, scale: isClicked ? 3 : 1 }}
-                />
-            </motion.div>
-
-            {/* 4. The Intelligence Pulse (Aura) */}
-            <motion.div
-                style={{
-                    position: 'absolute',
-                    width: 60,
-                    height: 60,
-                    left: mouseX,
-                    top: mouseY,
-                    x: '-50%',
-                    y: '-50%',
-                    border: `1px solid ${theme.primary}`,
+                    width: 4,
+                    height: 4,
+                    backgroundColor: primary,
                     borderRadius: '50%',
-                    opacity: 0.1,
+                    boxShadow: `0 0 10px ${primary}`,
                 }}
                 animate={{
-                    scale: [1, 1.2, 1],
+                    scale: isClicked ? 2 : isHovered ? 0 : 1,
+                    opacity: isHovered ? 0 : 1,
+                }}
+            />
+
+            {/* 4. SPEED TAIL (Unique kinetic detail) */}
+            <AnimatePresence>
+                {!isHovered && stretch > 1.2 && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.3 }}
+                        exit={{ opacity: 0 }}
+                        style={{
+                            position: 'absolute',
+                            left: springX,
+                            top: springY,
+                            x: '-50%',
+                            y: '-50%',
+                            width: 2,
+                            height: 40,
+                            backgroundColor: primary,
+                            rotate: direction - 90, // Points in direction of move
+                            transformOrigin: 'bottom center',
+                        }}
+                    />
+                )}
+            </AnimatePresence>
+
+            {/* 5. INTERACTION RING (Only on click/hover) */}
+            <motion.div
+                style={{
+                    position: 'absolute',
+                    left: springX,
+                    top: springY,
+                    x: '-50%',
+                    y: '-50%',
+                    width: 50,
+                    height: 50,
+                    border: `1px dashed ${primary}66`,
+                    borderRadius: '50%',
+                    opacity: isHovered ? 1 : 0,
+                }}
+                animate={{
+                    rotate: 360,
+                    scale: isHovered ? 1.4 : 0.8,
                 }}
                 transition={{
-                    duration: 3,
-                    repeat: Infinity,
+                    rotate: { duration: 10, repeat: Infinity, ease: 'linear' },
+                    default: { type: 'spring' }
                 }}
             />
 
