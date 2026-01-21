@@ -1,0 +1,197 @@
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-8) var(--space-4);
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    margin-top: 80px;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+}
+
+.auth-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-10);
+    box-shadow: var(--shadow-xl);
+    animation: fadeIn 0.6s ease-out;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+}
+
+.auth-header .logo-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-4);
+    animation: float 3s ease-in-out infinite;
+}
+
+.auth-header h1 {
+    font-size: 2rem;
+    margin-bottom: var(--space-3);
+    background: linear-gradient(135deg, var(--primary-400), var(--secondary-400));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.auth-header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+}
+
+.error-message {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--error-500);
+    border-radius: var(--radius-md);
+    color: var(--error-500);
+    font-size: 0.875rem;
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+.auth-footer {
+    margin-top: var(--space-6);
+    text-align: center;
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border-color);
+}
+
+.auth-footer p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.auth-link {
+    color: var(--primary-400);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.auth-link:hover {
+    color: var(--primary-300);
+    text-decoration: underline;
+}
+
+/* Features Section */
+.auth-features {
+    padding: var(--space-8);
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2xl);
+    animation: fadeIn 0.8s ease-out 0.2s both;
+}
+
+.auth-features h3 {
+    font-size: 1.75rem;
+    margin-bottom: var(--space-6);
+    background: linear-gradient(135deg, var(--primary-400), var(--secondary-400));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.auth-features ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.auth-features li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+}
+
+.feature-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.auth-features strong {
+    display: block;
+    color: var(--text-primary);
+    font-size: 1.125rem;
+    margin-bottom: var(--space-1);
+}
+
+.auth-features p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+    .auth-container {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-features {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .auth-page {
+        padding: var(--space-4);
+    }
+
+    .auth-card {
+        padding: var(--space-6);
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-header h1 {
+        font-size: 1.5rem;
+    }
+}

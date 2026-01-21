@@ -1,0 +1,90 @@
+.three-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background: #02020a;
+    /* Deep space black */
+    pointer-events: none;
+}
+
+.three-background canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Layered cosmic glow */
+.three-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%,
+            rgba(99, 102, 241, 0.05) 0%,
+            rgba(139, 92, 246, 0.05) 25%,
+            transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+    animation: pulseGlow 15s ease-in-out infinite alternate;
+}
+
+/* Secondary nebula haze */
+.three-background::after {
+    content: '';
+    position: absolute;
+    top: -25%;
+    left: -25%;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle at 70% 30%,
+            rgba(236, 72, 153, 0.03) 0%,
+            transparent 50%),
+        radial-gradient(circle at 20% 80%,
+            rgba(14, 165, 233, 0.03) 0%,
+            transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+    animation: drift 30s linear infinite;
+}
+
+@keyframes pulseGlow {
+    0% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes drift {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Ensure content is above background and readable */
+.landing>*:not(.three-background) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Subtle glassmorphism enhancement for all sections on this space background */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}

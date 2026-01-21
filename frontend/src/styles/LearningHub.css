@@ -1,0 +1,217 @@
+.learning-hub-page {
+    min-height: 100vh;
+    padding: var(--space-8) 0;
+    margin-top: 80px;
+}
+
+.my-learning-section {
+    margin-bottom: var(--space-12);
+}
+
+.my-learning-section h2,
+.all-courses-section h2 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    font-size: 1.75rem;
+}
+
+/* Enrolled Courses */
+.enrolled-courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: var(--space-6);
+}
+
+.enrolled-course-card {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    transition: all var(--transition-base);
+}
+
+.enrolled-course-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow);
+    border-color: var(--primary-500);
+}
+
+.course-thumbnail {
+    position: relative;
+    width: 150px;
+    height: 100px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.course-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.progress-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-2);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.progress-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: var(--space-1);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-500), var(--secondary-500));
+    transition: width var(--transition-slow);
+}
+
+.progress-text {
+    font-size: 0.75rem;
+    color: white;
+    font-weight: 600;
+}
+
+.course-content h3 {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-2);
+}
+
+.course-content p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-3);
+    line-height: 1.5;
+}
+
+/* All Courses */
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-6);
+}
+
+.course-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+}
+
+.course-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow);
+    border-color: var(--primary-500);
+}
+
+.course-image {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.course-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+}
+
+.course-card:hover .course-image img {
+    transform: scale(1.05);
+}
+
+.course-image .badge {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    text-transform: capitalize;
+}
+
+.course-body {
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1;
+}
+
+.course-body h3 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+}
+
+.course-body p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    flex: 1;
+}
+
+.course-meta {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--divider-color);
+    border-bottom: 1px solid var(--divider-color);
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.meta-item svg {
+    flex-shrink: 0;
+}
+
+.course-footer {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: auto;
+}
+
+.course-footer .btn {
+    flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .enrolled-courses-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .enrolled-course-card {
+        flex-direction: column;
+    }
+
+    .course-thumbnail {
+        width: 100%;
+        height: 180px;
+    }
+
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+}

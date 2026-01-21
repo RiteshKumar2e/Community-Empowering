@@ -1,0 +1,184 @@
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import { Menu, X, User, LogOut, Shield, Sun } from 'lucide-react'
+import { useState } from 'react'
+import '../styles/Navbar.css'
+
+const Navbar = () => {
+    const { isAuthenticated, user, logout } = useAuth()
+    const location = useLocation()
+    const navigate = useNavigate()
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+    const isActive = (path) => location.pathname === path
+    const isAdmin = user?.email === 'riteshkumar90359@gmail.com'
+
+    const scrollToSection = (sectionId) => {
+        if (location.pathname !== '/') {
+            navigate('/')
+            setTimeout(() => {
+                document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+            }, 100)
+        } else {
+            document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+        }
+        setMobileMenuOpen(false)
+    }
+
+    return (
+        <nav className="navbar">
+            <div className="container navbar-container">
+                <Link to="/" className="navbar-logo">
+                    <div className="logo-icon">🌟</div>
+                    <span className="logo-text">Community AI</span>
+                </Link>
+
+                {/* Desktop Navigation */}
+                <div className="navbar-links hide-mobile">
+                    {isAuthenticated ? (
+                        <>
+                            <Link
+                                to="/dashboard"
+                                className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}
+                            >
+                                Dashboard
+                            </Link>
+                            <Link
+                                to="/assistant"
+                                className={`nav-link ${isActive('/assistant') ? 'active' : ''}`}
+                            >
+                                AI Assistant
+                            </Link>
+                            <Link
+                                to="/resources"
+                                className={`nav-link ${isActive('/resources') ? 'active' : ''}`}
+                            >
+                                Resources
+                            </Link>
+                            <Link
+                                to="/learning"
+                                className={`nav-link ${isActive('/learning') ? 'active' : ''}`}
+                            >
+                                Learning
+                            </Link>
+                            {isAdmin && (
+                                <Link
+                                    to="/admin"
+                                    className={`nav-link admin-link ${isActive('/admin') ? 'active' : ''}`}
+                                >
+                                    <Shield size={16} />
+                                    Admin
+                                </Link>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <button onClick={() => scrollToSection('home')} className="nav-link">
+                                Home
+                            </button>
+                            <button onClick={() => scrollToSection('mission')} className="nav-link">
+                                Mission
+                            </button>
+                            <button onClick={() => scrollToSection('about')} className="nav-link">
+                                About
+                            </button>
+                            <button onClick={() => scrollToSection('goals')} className="nav-link">
+                                Goals
+                            </button>
+                            <button onClick={() => scrollToSection('testimonials')} className="nav-link">
+                                Testimonials
+                            </button>
+                            <button onClick={() => scrollToSection('contact')} className="nav-link">
+                                Contact
+                            </button>
+                        </>
+                    )}
+                </div>
+
+                {/* Right Side Actions */}
+                <div className="navbar-actions hide-mobile">
+                    {isAuthenticated ? (
+                        <div className="user-menu">
+                            <Link to="/profile" className="btn btn-ghost btn-sm">
+                                <User size={18} />
+                                {user?.name}
+                            </Link>
+                            <button onClick={logout} className="btn btn-outline btn-sm">
+                                <LogOut size={18} />
+                                Logout
+                            </button>
+                        </div>
+                    ) : (
+                        <>
+                            <Link to="/login" className="btn-signin">
+                                Sign In
+                            </Link>
+                            <Link to="/admin-login" className="btn-admin">
+                                Admin Login
+                            </Link>
+                        </>
+                    )}
+                </div>
+
+                {/* Mobile Menu Button */}
+                <button
+                    className="mobile-menu-btn hide-desktop"
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                    {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+            </div>
+
+            {/* Mobile Menu */}
+            {mobileMenuOpen && (
+                <div className="mobile-menu hide-desktop">
+                    {isAuthenticated ? (
+                        <>
+                            <Link to="/dashboard" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                                Dashboard
+                            </Link>
+                            <Link to="/assistant" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                                AI Assistant
+                            </Link>
+                            <Link to="/resources" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                                Resources
+                            </Link>
+                            <Link to="/learning" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                                Learning
+                            </Link>
+                            <Link to="/profile" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                                Profile
+                            </Link>
+                            {isAdmin && (
+                                <Link to="/admin" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                                    <Shield size={16} />
+                                    Admin Panel
+                                </Link>
+                            )}
+                            <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="mobile-link">
+                                Logout
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button onClick={() => scrollToSection('home')} className="mobile-link">Home</button>
+                            <button onClick={() => scrollToSection('mission')} className="mobile-link">Mission</button>
+                            <button onClick={() => scrollToSection('about')} className="mobile-link">About</button>
+                            <button onClick={() => scrollToSection('goals')} className="mobile-link">Goals</button>
+                            <button onClick={() => scrollToSection('testimonials')} className="mobile-link">Testimonials</button>
+                            <button onClick={() => scrollToSection('contact')} className="mobile-link">Contact</button>
+                            <Link to="/login" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                                Sign In
+                            </Link>
+                            <Link to="/admin-login" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                                Admin Login
+                            </Link>
+                        </>
+                    )}
+                </div>
+            )}
+        </nav>
+    )
+}
+
+export default Navbar
