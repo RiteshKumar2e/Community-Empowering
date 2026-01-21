@@ -134,7 +134,6 @@ const Login = () => {
                                 theme="filled_blue"
                                 size="large"
                                 text="signin_with"
-                                width="100%"
                             />
                         </div>
                     </form>

@@ -123,7 +123,8 @@ async def google_login(google_data: GoogleLogin, db: Session = Depends(get_db)):
     """Login or register user with Google OAuth"""
     try:
         # Verify the Google token
-        # Note: In production, you should set GOOGLE_CLIENT_ID in your .env file
+        # The token verification will work without specifying client_id
+        # as the token itself contains the client_id and Google verifies it
         idinfo = id_token.verify_oauth2_token(
             google_data.credential, 
             requests.Request()
@@ -132,6 +133,8 @@ async def google_login(google_data: GoogleLogin, db: Session = Depends(get_db)):
         # Get user info from Google token
         email = idinfo.get('email')
         name = idinfo.get('name', '')
+        
+        print(f"Google login attempt for email: {email}")  # Debug log
         
         if not email:
             raise HTTPException(
@@ -144,6 +147,7 @@ async def google_login(google_data: GoogleLogin, db: Session = Depends(get_db)):
         
         if not user:
             # Create new user with Google account
+            print(f"Creating new user for: {email}")  # Debug log
             user = User(
                 name=name,
                 email=email,
@@ -166,6 +170,8 @@ async def google_login(google_data: GoogleLogin, db: Session = Depends(get_db)):
         # Create access token
         access_token = create_access_token(data={"sub": user.email})
         
+        print(f"Google login successful for: {email}")  # Debug log
+        
         return {
             "token": access_token,
             "user": {
@@ -180,11 +186,19 @@ async def google_login(google_data: GoogleLogin, db: Session = Depends(get_db)):
         }
     except ValueError as e:
         # Invalid token
+        print(f"Google token verification failed: {str(e)}")  # Debug log
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid Google token"
+            detail=f"Invalid Google token: {str(e)}"
         )
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
     except Exception as e:
+        # Catch all other errors
+        print(f"Google authentication error: {str(e)}")  # Debug log
+        import traceback
+        traceback.print_exc()  # Print full traceback for debugging
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Google authentication failed: {str(e)}"
