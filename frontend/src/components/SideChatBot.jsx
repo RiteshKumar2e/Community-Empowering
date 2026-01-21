@@ -18,6 +18,7 @@ const SideChatBot = () => {
     const [inputText, setInputText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
+    const [showGreeting, setShowGreeting] = useState(true);
     const messagesEndRef = useRef(null);
 
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
@@ -211,13 +212,38 @@ const SideChatBot = () => {
                 )}
             </AnimatePresence>
 
-            <button
-                className={`chatbot-toggle-btn ${isOpen ? 'active' : ''}`}
-                onClick={() => setIsOpen(!isOpen)}
-                aria-label="Toggle Chatbot"
-            >
-                {isOpen ? <X size={28} /> : <MessageSquare size={28} />}
-            </button>
+            <AnimatePresence>
+                {!isOpen && showGreeting && (
+                    <motion.div
+                        className="chat-greeting-bubble"
+                        initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        onClick={() => setIsOpen(true)}
+                    >
+                        <div className="greeting-content">
+                            <span>Need help? Ask our AI Assistant!</span>
+                            <button className="greeting-close" onClick={(e) => {
+                                e.stopPropagation();
+                                setShowGreeting(false);
+                            }}>
+                                <X size={14} />
+                            </button>
+                        </div>
+                        <div className="greeting-arrow"></div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {!isOpen && (
+                <button
+                    className="chatbot-toggle-btn"
+                    onClick={() => setIsOpen(true)}
+                    aria-label="Open Chatbot"
+                >
+                    <MessageSquare size={28} />
+                </button>
+            )}
         </div>
     );
 };
