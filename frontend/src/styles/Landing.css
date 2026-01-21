@@ -990,7 +990,8 @@ button,
 .scroll-to-top {
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    right: -1400px;
+    left: auto;
     width: 56px;
     height: 56px;
     border-radius: 50%;
@@ -1009,6 +1010,12 @@ button,
     box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4),
         0 0 30px rgba(139, 92, 246, 0.2);
     backdrop-filter: blur(10px);
+}
+
+@media (max-width: 1400px) {
+    .scroll-to-top {
+        right: -1400px;
+    }
 }
 
 .scroll-to-top.visible {
