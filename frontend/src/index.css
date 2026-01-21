@@ -145,6 +145,51 @@ body.light-theme {
   --glass-blur: 16px;
 }
 
+/* Light Theme Button Overrides */
+body.light-theme .btn-ghost {
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--text-primary);
+}
+
+body.light-theme .btn-ghost:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .btn-outline {
+  color: var(--primary-600);
+  border-color: var(--primary-600);
+}
+
+body.light-theme .btn-outline:hover {
+  background: rgba(99, 102, 241, 0.05);
+  border-color: var(--primary-700);
+  color: var(--primary-700);
+}
+
+/* Light Theme Card Overrides */
+body.light-theme .card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme .card:hover {
+  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.15);
+}
+
+/* Light Theme Form Overrides */
+body.light-theme .form-input,
+body.light-theme .form-select,
+body.light-theme .form-textarea {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+body.light-theme .form-input::placeholder,
+body.light-theme .form-textarea::placeholder {
+  color: var(--text-muted);
+}
+
 /* ===================================
    RESET & BASE STYLES
    =================================== */
@@ -561,27 +606,39 @@ a:hover {
 }
 
 .badge-primary {
-  background: rgba(99, 102, 241, 0.2);
-  color: var(--primary-300);
-  border: 1px solid var(--primary-500);
+  background: var(--primary-500);
+  color: white;
+  border: 1px solid var(--primary-600);
+}
+
+.badge-secondary {
+  background: var(--secondary-500);
+  color: white;
+  border: 1px solid var(--secondary-600);
 }
 
 .badge-success {
-  background: rgba(16, 185, 129, 0.2);
-  color: var(--success-300);
-  border: 1px solid var(--success-500);
+  background: var(--success-500);
+  color: white;
+  border: 1px solid var(--success-600);
 }
 
 .badge-warning {
-  background: rgba(245, 158, 11, 0.2);
-  color: var(--secondary-300);
-  border: 1px solid var(--secondary-500);
+  background: var(--secondary-500);
+  color: white;
+  border: 1px solid var(--secondary-600);
 }
 
 .badge-error {
-  background: rgba(239, 68, 68, 0.2);
-  color: var(--error-300);
-  border: 1px solid var(--error-500);
+  background: var(--error-500);
+  color: white;
+  border: 1px solid var(--error-600);
+}
+
+.badge-info {
+  background: #3b82f6;
+  color: white;
+  border: 1px solid #2563eb;
 }
 
 /* ===================================
