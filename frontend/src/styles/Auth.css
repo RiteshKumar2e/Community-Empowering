@@ -122,7 +122,7 @@
     justify-content: center;
 }
 
-.google-login-wrapper > div {
+.google-login-wrapper>div {
     width: 100% !important;
 }
 
@@ -238,4 +238,50 @@
     .auth-header h1 {
         font-size: 1.5rem;
     }
+}
+
+/* ===================================
+   LIGHT THEME OVERRIDES
+   =================================== */
+
+body.light-theme .auth-card,
+body.light-theme .auth-features {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    box-shadow: 0 20px 60px rgba(99, 102, 241, 0.08);
+}
+
+body.light-theme .auth-header h1,
+body.light-theme .auth-features h3 {
+    background: linear-gradient(135deg, var(--primary-700), var(--primary-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.light-theme .auth-header p,
+body.light-theme .auth-features p,
+body.light-theme .auth-footer p {
+    color: var(--gray-600);
+}
+
+body.light-theme .auth-link {
+    color: var(--primary-600);
+}
+
+body.light-theme .auth-link:hover {
+    color: var(--primary-700);
+}
+
+body.light-theme .auth-divider {
+    color: var(--gray-400);
+}
+
+body.light-theme .auth-divider::before,
+body.light-theme .auth-divider::after {
+    border-bottom-color: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .auth-footer {
+    border-top-color: rgba(0, 0, 0, 0.05);
 }

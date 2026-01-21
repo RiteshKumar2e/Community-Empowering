@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLanguage } from '../contexts/LanguageContext'
-import { Search, Filter, ExternalLink, Building, Users, Briefcase, GraduationCap, Heart, Home, Leaf } from 'lucide-react'
+import { Search, Filter, ExternalLink, Building, Users, Briefcase, GraduationCap, Heart, Home, Leaf, BookOpen, Award } from 'lucide-react'
 import api from '../services/api'
 import '../styles/Resources.css'
 
@@ -238,16 +238,31 @@ const Resources = () => {
                 {/* Stats Section */}
                 <div className="stats-grid">
                     <div className="stat-card">
-                        <div className="stat-number">{resources.length}+</div>
-                        <div className="stat-label">Active Schemes</div>
+                        <div className="stat-icon">
+                            <BookOpen size={24} />
+                        </div>
+                        <div className="stat-content">
+                            <div className="stat-number">{resources.length}+</div>
+                            <div className="stat-label">Active Schemes</div>
+                        </div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-number">7</div>
-                        <div className="stat-label">Categories</div>
+                        <div className="stat-icon">
+                            <Search size={24} />
+                        </div>
+                        <div className="stat-content">
+                            <div className="stat-number">7</div>
+                            <div className="stat-label">Categories</div>
+                        </div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-number">100%</div>
-                        <div className="stat-label">Official Sources</div>
+                        <div className="stat-icon">
+                            <Award size={24} />
+                        </div>
+                        <div className="stat-content">
+                            <div className="stat-number">100%</div>
+                            <div className="stat-label">Official Sources</div>
+                        </div>
                     </div>
                 </div>
 

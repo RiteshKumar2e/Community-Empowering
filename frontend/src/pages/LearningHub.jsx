@@ -189,16 +189,31 @@ const LearningHub = () => {
                 {/* Stats Section */}
                 <div className="stats-grid">
                     <div className="stat-card">
-                        <div className="stat-number">50M+</div>
-                        <div className="stat-label">Active Learners</div>
+                        <div className="stat-icon">
+                            <Users size={24} />
+                        </div>
+                        <div className="stat-content">
+                            <div className="stat-number">50M+</div>
+                            <div className="stat-label">Active Learners</div>
+                        </div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-number">100%</div>
-                        <div className="stat-label">Free Courses</div>
+                        <div className="stat-icon">
+                            <Award size={24} />
+                        </div>
+                        <div className="stat-content">
+                            <div className="stat-number">100%</div>
+                            <div className="stat-label">Free Courses</div>
+                        </div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-number">1000+</div>
-                        <div className="stat-label">Certifications</div>
+                        <div className="stat-icon">
+                            <BookOpen size={24} />
+                        </div>
+                        <div className="stat-content">
+                            <div className="stat-number">1000+</div>
+                            <div className="stat-label">Certifications</div>
+                        </div>
                     </div>
                 </div>
 

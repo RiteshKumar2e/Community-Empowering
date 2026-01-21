@@ -146,3 +146,44 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ===================================
+   LIGHT THEME OVERRIDES
+   =================================== */
+
+body.light-theme .profile-header,
+body.light-theme .profile-details,
+body.light-theme .account-actions {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.05);
+}
+
+body.light-theme .detail-item p {
+    background: rgba(99, 102, 241, 0.03);
+    color: var(--gray-700);
+    border-color: rgba(99, 102, 241, 0.08);
+}
+
+body.light-theme .action-btn {
+    background: white;
+    border-color: rgba(99, 102, 241, 0.15);
+    color: var(--gray-800);
+}
+
+body.light-theme .action-btn:hover {
+    background: rgba(99, 102, 241, 0.04);
+    border-color: var(--primary-600);
+}
+
+body.light-theme .profile-info h1 {
+    color: var(--gray-900);
+}
+
+body.light-theme .profile-info p {
+    color: var(--gray-600);
+}
+
+body.light-theme .detail-item label {
+    color: var(--primary-700);
+}
