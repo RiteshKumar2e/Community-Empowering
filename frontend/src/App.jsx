@@ -15,6 +15,7 @@ import Profile from './pages/Profile'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
+import SideChatBot from './components/SideChatBot'
 
 // Google OAuth Client ID - Replace with your actual client ID
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "951248037202-st6tgbo07tjljditc95n7kuvgqr7a7mg.apps.googleusercontent.com"
@@ -66,6 +67,7 @@ function App() {
                                     </ProtectedRoute>
                                 } />
                             </Routes>
+                            <SideChatBot />
                         </div>
                     </LanguageProvider>
                 </AuthProvider>

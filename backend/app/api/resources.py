@@ -16,8 +16,7 @@ async def get_resources(db: Session = Depends(get_db)):
         "description": r.description,
         "category": r.category,
         "eligibility": r.eligibility,
-        "location": r.location,
-        "deadline": r.deadline,
+        "provider": r.provider,
         "link": r.link,
         "isNew": r.is_new
     } for r in resources]
@@ -36,8 +35,7 @@ async def get_resource(resource_id: int, db: Session = Depends(get_db)):
         "description": resource.description,
         "category": resource.category,
         "eligibility": resource.eligibility,
-        "location": resource.location,
-        "deadline": resource.deadline,
+        "provider": resource.provider,
         "link": resource.link,
         "isNew": resource.is_new
     }
