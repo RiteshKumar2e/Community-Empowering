@@ -127,7 +127,7 @@ button,
 
 .title-white {
     display: inline-block;
-    color: #ffffff;
+    color: var(--text-primary);
     font-weight: 800;
 }
 
@@ -140,6 +140,13 @@ button,
     background-clip: text;
     font-weight: 800;
     animation: gradientShift 3s ease infinite;
+}
+
+body.light-theme .title-purple-light {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 @keyframes gradientShift {
@@ -173,7 +180,7 @@ button,
 }
 
 .title-normal {
-    color: #ffffff;
+    color: var(--text-primary);
 }
 
 .title-gradient {
@@ -185,7 +192,7 @@ button,
 
 .hero-subtitle {
     font-size: clamp(1.125rem, 2vw, 1.375rem);
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary);
     margin-bottom: var(--space-10);
     max-width: 800px;
     margin-left: auto;
@@ -865,14 +872,19 @@ button,
 
 .landing-footer {
     padding: var(--space-20) 0 var(--space-8);
-    background: rgba(0, 0, 0, 0.3);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
     margin-top: var(--space-20);
+    transition: background 0.3s ease;
+}
+
+body.light-theme .landing-footer {
+    background: #f8fafc;
 }
 
 .footer-bottom {
     padding-top: var(--space-8);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid var(--divider-color);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -881,7 +893,7 @@ button,
 }
 
 .footer-bottom p {
-    color: #94a3b8;
+    color: var(--text-tertiary);
     font-size: 0.95rem;
     margin-bottom: 0;
 }
@@ -909,14 +921,17 @@ button,
 .footer-brand-header .logo-text {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-primary);
 }
 
 .connect-title {
     font-size: 1.25rem !important;
     font-weight: 600 !important;
-    color: #fef3c7 !important;
-    /* Cream/Gold color */
+    color: var(--secondary-400) !important;
+}
+
+body.light-theme .connect-title {
+    color: var(--primary-600) !important;
 }
 
 .footer-social-links {
@@ -929,7 +944,7 @@ button,
     display: flex !important;
     align-items: center;
     justify-content: center;
-    color: rgba(255, 255, 255, 0.7) !important;
+    color: var(--text-secondary) !important;
     transition: all 0.3s ease !important;
     background: none !important;
     border: none !important;
@@ -939,15 +954,14 @@ button,
 }
 
 .social-icon-link:hover {
-    color: #ffffff !important;
+    color: var(--primary-500) !important;
     transform: translateY(-3px) !important;
-    box-shadow: none !important;
 }
 
 .footer-column h5 {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-primary);
     margin-bottom: var(--space-6);
     text-transform: none;
     letter-spacing: normal;
@@ -955,8 +969,7 @@ button,
 
 .footer-column a {
     display: block;
-    color: #94a3b8;
-    /* Muted slate color */
+    color: var(--text-tertiary);
     text-decoration: none;
     margin-bottom: var(--space-4);
     font-size: 1rem;
@@ -965,7 +978,7 @@ button,
 }
 
 .footer-column a:hover {
-    color: #ffffff;
+    color: var(--primary-500);
     transform: translateX(4px);
 }
 
@@ -1027,12 +1040,14 @@ button,
 .scroll-line {
     width: 2px;
     height: 40px;
-    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.5));
+    background: linear-gradient(to bottom, transparent, var(--primary-500));
+    opacity: 0.3;
 }
 
 .scroll-chevron {
     font-size: 1.5rem;
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--primary-500);
+    opacity: 0.5;
     margin-bottom: -10px;
     animation: fadeInUp 1s ease-out 1s backwards;
 }

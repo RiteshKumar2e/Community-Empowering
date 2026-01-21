@@ -6,9 +6,9 @@
     height: 100vh;
     z-index: -1;
     overflow: hidden;
-    background: #02020a;
-    /* Deep space black */
+    background: var(--bg-primary);
     pointer-events: none;
+    transition: background 0.5s ease;
 }
 
 .three-background canvas {
@@ -34,6 +34,13 @@
     animation: pulseGlow 15s ease-in-out infinite alternate;
 }
 
+body.light-theme .three-background::before {
+    background: radial-gradient(circle at 50% 50%,
+            rgba(99, 102, 241, 0.05) 0%,
+            rgba(79, 70, 229, 0.05) 30%,
+            transparent 80%);
+}
+
 /* Secondary nebula haze */
 .three-background::after {
     content: '';
@@ -43,14 +50,23 @@
     width: 150%;
     height: 150%;
     background: radial-gradient(circle at 70% 30%,
-            rgba(236, 72, 153, 0.03) 0%,
+            rgba(236, 72, 153, 0.02) 0%,
             transparent 50%),
         radial-gradient(circle at 20% 80%,
-            rgba(14, 165, 233, 0.03) 0%,
+            rgba(14, 165, 233, 0.02) 0%,
             transparent 50%);
     pointer-events: none;
     z-index: 1;
     animation: drift 30s linear infinite;
+}
+
+body.light-theme .three-background::after {
+    background: radial-gradient(circle at 70% 30%,
+            rgba(99, 102, 241, 0.02) 0%,
+            transparent 60%),
+        radial-gradient(circle at 20% 80%,
+            rgba(14, 165, 233, 0.02) 0%,
+            transparent 60%);
 }
 
 @keyframes pulseGlow {

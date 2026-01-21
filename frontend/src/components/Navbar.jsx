@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { Menu, X, User, LogOut, Shield, Sun } from 'lucide-react'
 import { useState } from 'react'
+import ThemeToggle from './ThemeToggle'
 import '../styles/Navbar.css'
 
 const Navbar = () => {
@@ -97,6 +98,7 @@ const Navbar = () => {
 
                 {/* Right Side Actions */}
                 <div className="navbar-actions hide-mobile">
+                    <ThemeToggle />
                     {isAuthenticated ? (
                         <div className="user-menu">
                             <Link to="/profile" className="btn btn-ghost btn-sm">
