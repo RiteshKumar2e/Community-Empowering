@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.models.models import Course, Enrollment, User
+from app.models.models import Course, Enrollment, User, LearningPlatform
 from app.api.users import get_current_user
 
 router = APIRouter()
@@ -47,6 +47,26 @@ async def get_enrolled_courses(
             })
     
     return enrolled_courses
+
+@router.get("/platforms")
+async def get_platforms(db: Session = Depends(get_db)):
+    """Get all external learning platforms"""
+    import json
+    platforms = db.query(LearningPlatform).all()
+    
+    return [{
+        "id": p.id,
+        "title": p.title,
+        "description": p.description,
+        "category": p.category,
+        "provider": p.provider,
+        "duration": p.duration,
+        "students": p.students,
+        "level": p.level,
+        "link": p.link,
+        "features": json.loads(p.features) if p.features else [],
+        "isOfficial": p.is_official
+    } for p in platforms]
 
 @router.post("/enroll/{course_id}")
 async def enroll_in_course(

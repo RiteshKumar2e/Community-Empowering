@@ -1,16 +1,85 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
+from typing import List, Optional
 from app.core.database import get_db
-from app.models.models import User, Query, Enrollment, Course
+from app.models.models import User, Query, Enrollment, Course, Resource, LearningPlatform
 from app.api.users import get_current_user
 
 router = APIRouter()
 
+class ResourceCreate(BaseModel):
+    title: str
+    description: str
+    category: str
+    eligibility: Optional[str] = None
+    provider: Optional[str] = None
+    link: str
+    isNew: bool = False
+
+class PlatformCreate(BaseModel):
+    title: str
+    description: str
+    category: str
+    provider: str
+    duration: str
+    students: str
+    level: str
+    link: str
+    features: List[str]
+    isOfficial: bool = False
+
 async def verify_admin(current_user: User = Depends(get_current_user)):
     """Verify that the current user is an admin"""
-    if current_user.email != 'riteshkumar90359@gmail.com':
+    if not current_user.is_admin and current_user.email != 'riteshkumar90359@gmail.com':
         raise HTTPException(status_code=403, detail="Admin access required")
     return current_user
+
+@router.post("/resources")
+async def add_resource(
+    resource_data: ResourceCreate,
+    admin: User = Depends(verify_admin),
+    db: Session = Depends(get_db)
+):
+    """Add a new government resource/scheme"""
+    new_resource = Resource(
+        title=resource_data.title,
+        description=resource_data.description,
+        category=resource_data.category,
+        eligibility=resource_data.eligibility,
+        provider=resource_data.provider,
+        link=resource_data.link,
+        is_new=resource_data.isNew
+    )
+    db.add(new_resource)
+    db.commit()
+    db.refresh(new_resource)
+    return new_resource
+
+@router.post("/platforms")
+async def add_platform(
+    platform_data: PlatformCreate,
+    admin: User = Depends(verify_admin),
+    db: Session = Depends(get_db)
+):
+    """Add a new learning platform"""
+    import json
+    new_platform = LearningPlatform(
+        title=platform_data.title,
+        description=platform_data.description,
+        category=platform_data.category,
+        provider=platform_data.provider,
+        duration=platform_data.duration,
+        students=platform_data.students,
+        level=platform_data.level,
+        link=platform_data.link,
+        features=json.dumps(platform_data.features),
+        is_official=platform_data.isOfficial
+    )
+    db.add(new_platform)
+    db.commit()
+    db.refresh(new_platform)
+    return new_platform
 
 @router.get("/users")
 async def get_all_users(

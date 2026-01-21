@@ -15,6 +15,7 @@ class User(Base):
     language = Column(String, default="en")
     community_type = Column(String, default="general")
     profile_image = Column(String)
+    is_admin = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
@@ -29,12 +30,28 @@ class Resource(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     description = Column(Text)
-    category = Column(String, nullable=False)  # schemes, jobs, ngos
+    category = Column(String, nullable=False)  # education, health, finance, etc.
     eligibility = Column(Text)
-    location = Column(String)
-    deadline = Column(String)
+    provider = Column(String)
     link = Column(String)
     is_new = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+class LearningPlatform(Base):
+    __tablename__ = "learning_platforms"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    description = Column(Text)
+    category = Column(String) # digital, professional, etc.
+    provider = Column(String)
+    duration = Column(String)
+    students = Column(String)
+    level = Column(String)
+    link = Column(String)
+    features = Column(Text) # JSON string of features
+    is_official = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

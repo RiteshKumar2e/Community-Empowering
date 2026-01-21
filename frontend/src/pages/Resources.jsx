@@ -363,11 +363,29 @@ const Resources = () => {
     ]
 
     useEffect(() => {
-        // Simulate API call - in production, this would fetch from backend
-        setTimeout(() => {
-            setResources(governmentResources)
-            setLoading(false)
-        }, 500)
+        const fetchResources = async () => {
+            try {
+                setLoading(true)
+                const response = await api.get('/resources')
+                const dbResources = response.data || []
+
+                // Combine hardcoded with DB resources, avoiding duplicates by title
+                const combined = [...governmentResources]
+                dbResources.forEach(dbR => {
+                    if (!combined.find(h => h.title === dbR.title)) {
+                        combined.unshift(dbR)
+                    }
+                })
+
+                setResources(combined)
+            } catch (error) {
+                console.error('Error fetching resources:', error)
+                setResources(governmentResources)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchResources()
     }, [])
 
     useEffect(() => {

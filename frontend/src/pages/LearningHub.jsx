@@ -1,10 +1,38 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BookOpen, Play, ExternalLink, Clock, Award, Users, GraduationCap, Code, Briefcase, Languages } from 'lucide-react'
+import api from '../services/api'
 import '../styles/LearningHub.css'
 
 const LearningHub = () => {
+    const [platforms, setPlatforms] = useState([])
     const [selectedCategory, setSelectedCategory] = useState('all')
     const [showAll, setShowAll] = useState(false)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchPlatforms = async () => {
+            try {
+                setLoading(true)
+                const response = await api.get('/learning/platforms')
+                const dbPlatforms = response.data || []
+
+                const combined = [...learningPlatforms]
+                dbPlatforms.forEach(dbP => {
+                    if (!combined.find(h => h.title === dbP.title)) {
+                        combined.unshift(dbP)
+                    }
+                })
+
+                setPlatforms(combined)
+            } catch (error) {
+                console.error('Error fetching platforms:', error)
+                setPlatforms(learningPlatforms)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchPlatforms()
+    }, [])
 
     const categories = [
         { value: 'all', label: 'All Courses', icon: <BookOpen size={18} /> },
@@ -496,8 +524,8 @@ const LearningHub = () => {
     ]
 
     const filteredPlatforms = selectedCategory === 'all'
-        ? learningPlatforms
-        : learningPlatforms.filter(p => p.category === selectedCategory)
+        ? platforms
+        : platforms.filter(p => p.category === selectedCategory)
 
     // Show only 4 platforms initially, then all on "View More"
     const displayedPlatforms = showAll ? filteredPlatforms : filteredPlatforms.slice(0, 4)
@@ -517,8 +545,8 @@ const LearningHub = () => {
                             <Users size={24} />
                         </div>
                         <div className="stat-content">
-                            <div className="stat-number">50M+</div>
-                            <div className="stat-label">Active Learners</div>
+                            <div className="stat-number">{platforms.length}+</div>
+                            <div className="stat-label">Active Portals</div>
                         </div>
                     </div>
                     <div className="stat-card">
@@ -560,7 +588,12 @@ const LearningHub = () => {
 
                 {/* Learning Platforms Grid */}
                 <div className="platforms-grid">
-                    {displayedPlatforms.map((platform, index) => (
+                    {loading ? (
+                        <div className="loading-state">
+                            <div className="spinner"></div>
+                            <p>Loading curated platforms...</p>
+                        </div>
+                    ) : displayedPlatforms.map((platform, index) => (
                         <div key={index} className="platform-card">
                             <div className="platform-header">
                                 <div className="header-badges">
