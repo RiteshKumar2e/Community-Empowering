@@ -371,12 +371,13 @@ body.light-theme .title-purple-light {
 .feature-card {
     padding: var(--space-8);
     background: var(--bg-card);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur, 10px));
     border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
     transition: all var(--transition-base);
     position: relative;
     overflow: hidden;
+    box-shadow: var(--shadow-md);
 }
 
 .feature-card::before {
@@ -407,7 +408,8 @@ body.light-theme .title-purple-light {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(99, 102, 241, 0.1);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    border: 1px solid rgba(99, 102, 241, 0.2);
     border-radius: var(--radius-lg);
     margin-bottom: var(--space-4);
     transition: all var(--transition-base);
@@ -415,6 +417,7 @@ body.light-theme .title-purple-light {
 
 .feature-card:hover .feature-icon {
     transform: scale(1.1) rotate(5deg);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
 }
 
 .feature-card h3 {
@@ -805,10 +808,11 @@ body.light-theme .title-purple-light {
 .contact-info {
     padding: var(--space-12);
     background: var(--bg-card);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur, 10px));
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-3xl);
     text-align: center;
+    box-shadow: var(--shadow-xl);
 }
 
 .logo-section {

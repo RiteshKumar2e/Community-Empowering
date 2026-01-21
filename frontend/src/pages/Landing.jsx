@@ -333,35 +333,6 @@ const Landing = () => {
                             </button>
                         </div>
 
-                        {/* Mini Features */}
-                        <div className="features-grid-mini">
-                            <div className="feature-mini">
-                                <span className="icon">🧠</span>
-                                <span>Recursive Reasoning</span>
-                            </div>
-                            <div className="feature-mini">
-                                <span className="icon">🛡️</span>
-                                <span>Kernel Security</span>
-                            </div>
-                            <div className="feature-mini">
-                                <span className="icon">📈</span>
-                                <span>Predictive Resolve</span>
-                            </div>
-                            <div className="feature-mini">
-                                <span className="icon">⚡</span>
-                                <span>Atomic Latency</span>
-                            </div>
-                        </div>
-
-                        {/* Stats */}
-                        <div className="stats-grid">
-                            {stats.map((stat, index) => (
-                                <div key={index} className="stat-card">
-                                    <div className="stat-value">{stat.value}</div>
-                                    <div className="stat-label">{stat.label}</div>
-                                </div>
-                            ))}
-                        </div>
                     </div>
                 </div>
             </section>

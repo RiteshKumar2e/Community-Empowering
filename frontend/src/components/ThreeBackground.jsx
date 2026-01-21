@@ -167,10 +167,36 @@ const ThreeBackground = () => {
             blending: THREE.NormalBlending
         })
         const lineGeometry = new THREE.BufferGeometry()
-        const linePositions = new Float32Array(500 * 3) // max connections
+        const linePositions = new Float32Array(500 * 3)
         lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3))
         const networkLines = new THREE.LineSegments(lineGeometry, lineMaterial)
         scene.add(networkLines)
+
+        // 5. Floating Glass Planes (Advanced Light Theme)
+        const planes = []
+        const planeMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0,
+            roughness: 0.1,
+            metalness: 0.1,
+            transmission: 0.5,
+            thickness: 0.5,
+            ior: 1.5
+        })
+        for (let i = 0; i < 6; i++) {
+            const geom = new THREE.PlaneGeometry(10, 10)
+            const mesh = new THREE.Mesh(geom, planeMaterial)
+            mesh.position.set(
+                (Math.random() - 0.5) * 60,
+                (Math.random() - 0.5) * 40,
+                (Math.random() - 0.5) * 20 - 15
+            )
+            mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0)
+            const speed = (Math.random() - 0.5) * 0.002
+            planes.push({ mesh, speed })
+            scene.add(mesh)
+        }
 
         updateFogAndLights()
 
@@ -185,6 +211,7 @@ const ThreeBackground = () => {
                 starsMaterial.opacity = isLight ? 0.2 : 0.5
                 structureMaterial.opacity = isLight ? 0.2 : 0.1
                 structureMaterial.color.setHex(isLight ? 0x4f46e5 : 0x8b5cf6)
+                planeMaterial.opacity = isLight ? 0.05 : 0
             }
         })
         observer.observe(document.body, { attributes: true, attributeFilter: ['class'] })
@@ -217,6 +244,15 @@ const ThreeBackground = () => {
                 s.mesh.rotation.y += s.rotSpeed
                 s.mesh.position.y += Math.sin(time * 5 + s.mesh.position.x) * 0.005
             })
+
+            // Advanced Planes Animation
+            if (isLight) {
+                planes.forEach(p => {
+                    p.mesh.rotation.x += p.speed
+                    p.mesh.rotation.y += p.speed
+                    p.mesh.position.z += Math.sin(time * 2) * 0.01
+                })
+            }
 
             // Network Lines Logic (Light Mode)
             if (isLight) {
