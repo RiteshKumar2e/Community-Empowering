@@ -871,18 +871,19 @@ button,
 }
 
 .footer-bottom {
-    text-align: center;
-    padding-top: var(--space-12);
+    padding-top: var(--space-8);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
 }
 
 .footer-bottom p {
     color: #94a3b8;
     font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    margin-bottom: 0;
 }
 
 /* New Footer Pattern Style */
@@ -992,14 +993,14 @@ button,
     left: 50%;
     transform: translateX(-50%);
     cursor: pointer;
-    animation: fadeInUp 1s ease-out 1s backwards, bounce 2s infinite;
+    animation: fadeInUp 1s ease-out 1s backwards, bounce-center 2s infinite;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
 }
 
-@keyframes bounce {
+@keyframes bounce-center {
 
     0%,
     100% {
@@ -1008,6 +1009,18 @@ button,
 
     50% {
         transform: translateX(-50%) translateY(-10px);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
     }
 }
 
