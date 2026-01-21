@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import os
 from app.core.config import settings
 from app.core.database import engine, Base
 from app.models import models  # Import models to register them
@@ -13,6 +15,12 @@ app = FastAPI(
     description="AI-powered platform for community access to information and resources",
     version="1.0.0"
 )
+
+# Ensure uploads directory exists
+os.makedirs("uploads/profiles", exist_ok=True)
+
+# Mount static files
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # CORS middleware
 app.add_middleware(

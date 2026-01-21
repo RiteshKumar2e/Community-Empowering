@@ -1,11 +1,14 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { User, Mail, Phone, MapPin, Globe, Edit2, Save } from 'lucide-react'
+import { User, Mail, Phone, MapPin, Globe, Edit2, Save, Camera, LogOut, Shield, Bell } from 'lucide-react'
+import api from '../services/api'
 import '../styles/Profile.css'
 
 const Profile = () => {
-    const { user, logout } = useAuth()
+    const { user, logout, updateUser } = useAuth()
     const [isEditing, setIsEditing] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const fileInputRef = useRef(null)
     const [formData, setFormData] = useState({
         name: user?.name || '',
         email: user?.email || '',
@@ -23,8 +26,61 @@ const Profile = () => {
     }
 
     const handleSave = async () => {
-        // API call to update profile
-        setIsEditing(false)
+        setLoading(true)
+        try {
+            const response = await api.put('/users/me', formData)
+            updateUser(response.data)
+            setIsEditing(false)
+        } catch (error) {
+            console.error('Failed to update profile:', error)
+            alert('Failed to update profile. Please try again.')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handlePhotoClick = () => {
+        fileInputRef.current.click()
+    }
+
+    const handlePhotoChange = async (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+
+        // Basic validation
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file.')
+            return
+        }
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        setLoading(true)
+        try {
+            const response = await api.post('/users/me/photo', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            // Update the user state with new photo path
+            const updatedUser = { ...user, profileImage: response.data.profileImage }
+            updateUser(updatedUser)
+        } catch (error) {
+            console.error('Failed to upload photo:', error)
+            alert('Failed to upload photo. Please try again.')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    // Helper to get correctly formatted image URL
+    const getProfileImage = () => {
+        if (user?.profileImage) {
+            const baseUrl = api.defaults.baseURL.replace('/api', '')
+            return `${baseUrl}${user.profileImage}`
+        }
+        return null
     }
 
     return (
@@ -33,20 +89,43 @@ const Profile = () => {
                 <div className="profile-container">
                     {/* Profile Header */}
                     <div className="profile-header">
-                        <div className="profile-avatar">
-                            <User size={48} />
+                        <div className="profile-avatar-container">
+                            <div className="profile-avatar" onClick={handlePhotoClick}>
+                                {getProfileImage() ? (
+                                    <img src={getProfileImage()} alt={user?.name} className="avatar-img" />
+                                ) : (
+                                    <User size={48} />
+                                )}
+                                <div className="avatar-overlay">
+                                    <Camera size={20} />
+                                </div>
+                            </div>
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handlePhotoChange}
+                                style={{ display: 'none' }}
+                                accept="image/*"
+                            />
                         </div>
                         <div className="profile-info">
                             <h1>{user?.name}</h1>
                             <p>{user?.email}</p>
-                            <span className="badge badge-primary">{user?.communityType || 'General'} User</span>
+                            <span className="badge badge-primary">{user?.communityType?.charAt(0).toUpperCase() + user?.communityType?.slice(1) || 'General'} User</span>
                         </div>
                         <button
                             className="btn btn-outline"
-                            onClick={() => setIsEditing(!isEditing)}
+                            onClick={isEditing ? handleSave : () => setIsEditing(true)}
+                            disabled={loading}
                         >
-                            {isEditing ? <Save size={18} /> : <Edit2 size={18} />}
-                            {isEditing ? 'Save Changes' : 'Edit Profile'}
+                            {loading ? (
+                                'Saving...'
+                            ) : (
+                                <>
+                                    {isEditing ? <Save size={18} /> : <Edit2 size={18} />}
+                                    {isEditing ? 'Save Changes' : 'Edit Profile'}
+                                </>
+                            )}
                         </button>
                     </div>
 
@@ -123,7 +202,7 @@ const Profile = () => {
                                         className="form-input"
                                     />
                                 ) : (
-                                    <p>{user?.location}</p>
+                                    <p>{user?.location || 'Not set'}</p>
                                 )}
                             </div>
 
@@ -146,7 +225,11 @@ const Profile = () => {
                                         <option value="mr">मराठी (Marathi)</option>
                                     </select>
                                 ) : (
-                                    <p>{user?.language === 'hi' ? 'हिंदी (Hindi)' : 'English'}</p>
+                                    <p>{formData.language === 'en' ? 'English' :
+                                        formData.language === 'hi' ? 'हिंदी (Hindi)' :
+                                            formData.language === 'bn' ? 'বাংলা (Bengali)' :
+                                                formData.language === 'te' ? 'తెలుగు (Telugu)' :
+                                                    formData.language === 'mr' ? 'मराठी (Marathi)' : 'English'}</p>
                                 )}
                             </div>
 
@@ -170,7 +253,7 @@ const Profile = () => {
                                         <option value="senior">Senior Citizen</option>
                                     </select>
                                 ) : (
-                                    <p>{user?.communityType || 'General'}</p>
+                                    <p>{user?.communityType?.charAt(0).toUpperCase() + user?.communityType?.slice(1) || 'General'}</p>
                                 )}
                             </div>
                         </div>
@@ -181,15 +264,15 @@ const Profile = () => {
                         <h2>Account Settings</h2>
                         <div className="actions-grid">
                             <button className="action-btn">
-                                Change Password
+                                <Shield size={18} />
+                                Privacy & Security
                             </button>
                             <button className="action-btn">
-                                Privacy Settings
-                            </button>
-                            <button className="action-btn">
-                                Notification Preferences
+                                <Bell size={18} />
+                                Notifications
                             </button>
                             <button className="action-btn danger" onClick={logout}>
+                                <LogOut size={18} />
                                 Logout
                             </button>
                         </div>

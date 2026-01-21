@@ -101,6 +101,11 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const updateUser = (userData) => {
+        localStorage.setItem('user', JSON.stringify(userData))
+        setUser(userData)
+    }
+
     const value = {
         user,
         loading,
@@ -108,6 +113,7 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         googleLogin,
+        updateUser,
         isAuthenticated: !!user
     }
 
