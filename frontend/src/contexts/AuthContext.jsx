@@ -80,12 +80,34 @@ export const AuthProvider = ({ children }) => {
         navigate('/')
     }
 
+    const googleLogin = async (credential) => {
+        try {
+            const response = await api.post('/auth/google-login', { credential })
+            const { token, user: userData } = response.data
+
+            localStorage.setItem('token', token)
+            localStorage.setItem('user', JSON.stringify(userData))
+            api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+            setUser(userData)
+            navigate('/dashboard')
+
+            return { success: true }
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.detail || 'Google login failed'
+            }
+        }
+    }
+
     const value = {
         user,
         loading,
         login,
         register,
         logout,
+        googleLogin,
         isAuthenticated: !!user
     }
 

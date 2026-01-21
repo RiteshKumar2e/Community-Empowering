@@ -2,9 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
+from google.oauth2 import id_token
+from google.auth.transport import requests
 from app.core.database import get_db
 from app.core.security import verify_password, get_password_hash, create_access_token
 from app.models.models import User
+import os
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
@@ -111,3 +114,79 @@ async def login(user_data: UserLogin, db: Session = Depends(get_db)):
             "communityType": user.community_type
         }
     }
+
+class GoogleLogin(BaseModel):
+    credential: str
+
+@router.post("/google-login", response_model=dict)
+async def google_login(google_data: GoogleLogin, db: Session = Depends(get_db)):
+    """Login or register user with Google OAuth"""
+    try:
+        # Verify the Google token
+        # Note: In production, you should set GOOGLE_CLIENT_ID in your .env file
+        idinfo = id_token.verify_oauth2_token(
+            google_data.credential, 
+            requests.Request()
+        )
+        
+        # Get user info from Google token
+        email = idinfo.get('email')
+        name = idinfo.get('name', '')
+        
+        if not email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email not provided by Google"
+            )
+        
+        # Check if user exists
+        user = db.query(User).filter(User.email == email).first()
+        
+        if not user:
+            # Create new user with Google account
+            user = User(
+                name=name,
+                email=email,
+                phone="",  # Google doesn't provide phone by default
+                password_hash=get_password_hash(os.urandom(32).hex()),  # Random password for OAuth users
+                location="",
+                language="en",
+                community_type="general"
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+        
+        if not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Inactive user"
+            )
+        
+        # Create access token
+        access_token = create_access_token(data={"sub": user.email})
+        
+        return {
+            "token": access_token,
+            "user": {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+                "phone": user.phone,
+                "location": user.location,
+                "language": user.language,
+                "communityType": user.community_type
+            }
+        }
+    except ValueError as e:
+        # Invalid token
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid Google token"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Google authentication failed: {str(e)}"
+        )
+

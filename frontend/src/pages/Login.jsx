@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { GoogleLogin } from '@react-oauth/google'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import { Mail, Lock, AlertCircle, Loader } from 'lucide-react'
 import '../styles/Auth.css'
 
 const Login = () => {
-    const { login } = useAuth()
+    const { login, googleLogin } = useAuth()
     const { t } = useLanguage()
     const [formData, setFormData] = useState({
         email: '',
@@ -35,6 +36,23 @@ const Login = () => {
         }
 
         setLoading(false)
+    }
+
+    const handleGoogleSuccess = async (credentialResponse) => {
+        setError('')
+        setLoading(true)
+
+        const result = await googleLogin(credentialResponse.credential)
+
+        if (!result.success) {
+            setError(result.error)
+        }
+
+        setLoading(false)
+    }
+
+    const handleGoogleError = () => {
+        setError('Google sign-in failed. Please try again.')
     }
 
     return (
@@ -104,6 +122,21 @@ const Login = () => {
                                 t('login')
                             )}
                         </button>
+
+                        <div className="auth-divider">
+                            <span>OR</span>
+                        </div>
+
+                        <div className="google-login-wrapper">
+                            <GoogleLogin
+                                onSuccess={handleGoogleSuccess}
+                                onError={handleGoogleError}
+                                theme="filled_blue"
+                                size="large"
+                                text="signin_with"
+                                width="100%"
+                            />
+                        </div>
                     </form>
 
                     <div className="auth-footer">

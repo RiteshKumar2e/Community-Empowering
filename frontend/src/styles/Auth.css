@@ -93,6 +93,50 @@
     }
 }
 
+/* Auth Divider */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: var(--space-5) 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.auth-divider span {
+    padding: 0 var(--space-3);
+    font-weight: 500;
+}
+
+/* Google Login Wrapper */
+.google-login-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.google-login-wrapper > div {
+    width: 100% !important;
+}
+
+.google-login-wrapper button {
+    width: 100% !important;
+    border-radius: var(--radius-md) !important;
+    transition: all var(--transition-normal) !important;
+}
+
+.google-login-wrapper button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg) !important;
+}
+
 .auth-footer {
     margin-top: var(--space-6);
     text-align: center;
