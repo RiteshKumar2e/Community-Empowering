@@ -12,11 +12,10 @@ const Landing = () => {
     const { t } = useLanguage()
     const [selectedFeature, setSelectedFeature] = useState(null)
     const [showScrollTop, setShowScrollTop] = useState(false)
-
     // Scroll to Top Logic
     useEffect(() => {
         const handleScroll = () => {
-            setShowScrollTop(window.scrollY > 200);
+            setShowScrollTop(window.scrollY > 400);
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
@@ -39,6 +38,7 @@ const Landing = () => {
             });
         }
     };
+
 
     const FeatureModal = ({ feature, onClose }) => {
         if (!feature) return null;
