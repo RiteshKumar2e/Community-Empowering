@@ -8,7 +8,7 @@ const ParticleCursor = () => {
     const mouseX = useMotionValue(-100);
     const mouseY = useMotionValue(-100);
 
-    const spring = { damping: 25, stiffness: 300, mass: 0.5 };
+    const spring = { damping: 20, stiffness: 200, mass: 0.5 }; // Reduced stiffness for smoother performance
     const x = useSpring(mouseX, spring);
     const y = useSpring(mouseY, spring);
 
@@ -17,7 +17,17 @@ const ParticleCursor = () => {
             mouseX.set(e.clientX);
             mouseY.set(e.clientY);
         };
-        const over = (e) => setIsHovered(!!e.target.closest('a, button, input, select, .clickable'));
+
+        // Throttle hover detection to reduce overhead
+        let hoverTimeout;
+        const over = (e) => {
+            if (hoverTimeout) return;
+            hoverTimeout = setTimeout(() => {
+                setIsHovered(!!e.target.closest('a, button, input, select, .clickable'));
+                hoverTimeout = null;
+            }, 50);
+        };
+
         const theme = () => setIsDarkMode(!document.body.classList.contains('light-theme'));
 
         window.addEventListener('mousemove', move);
@@ -30,6 +40,7 @@ const ParticleCursor = () => {
             window.removeEventListener('mousemove', move);
             window.removeEventListener('mouseover', over);
             obs.disconnect();
+            if (hoverTimeout) clearTimeout(hoverTimeout);
         };
     }, [mouseX, mouseY]);
 

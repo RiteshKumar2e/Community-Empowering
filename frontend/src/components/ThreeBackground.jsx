@@ -46,27 +46,27 @@ const ThreeBackground = () => {
             }
         }
 
-        // 1. Starfield (Static distant stars)
+        // 1. Starfield (Static distant stars) - OPTIMIZED
         const starsGeometry = new THREE.BufferGeometry()
-        const starsCount = 10000
+        const starsCount = 3000 // Reduced from 10000
         const starsPos = new Float32Array(starsCount * 3)
         for (let i = 0; i < starsCount * 3; i++) {
             starsPos[i] = (Math.random() - 0.5) * 1000
         }
         starsGeometry.setAttribute('position', new THREE.BufferAttribute(starsPos, 3))
         const starsMaterial = new THREE.PointsMaterial({
-            size: 0.7,
+            size: 0.8, // Slightly larger to compensate
             color: isLight ? 0x6366f1 : 0xffffff,
             transparent: true,
-            opacity: isLight ? 0.2 : 0.5,
+            opacity: isLight ? 0.3 : 0.6, // Increased opacity
             sizeAttenuation: true
         })
         const starField = new THREE.Points(starsGeometry, starsMaterial)
         scene.add(starField)
 
-        // 2. Cosmic Dust / Nebula Particles
+        // 2. Cosmic Dust / Nebula Particles - OPTIMIZED
         const nebulaGeometry = new THREE.BufferGeometry()
-        const nebulaCount = 4000
+        const nebulaCount = 1500 // Reduced from 4000
         const nebulaPos = new Float32Array(nebulaCount * 3)
         const nebulaColors = new Float32Array(nebulaCount * 3)
 
@@ -122,7 +122,7 @@ const ThreeBackground = () => {
         scene.add(nebula)
         updateNebulaColors()
 
-        // 3. Floating Geometric Structures
+        // 3. Floating Geometric Structures - OPTIMIZED
         const structures = []
         const structureMaterial = new THREE.MeshPhongMaterial({
             color: 0x8b5cf6,
@@ -132,7 +132,7 @@ const ThreeBackground = () => {
             shininess: 100
         })
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 3; i++) { // Reduced from 5 to 3
             const geometry = i % 2 === 0 ?
                 new THREE.IcosahedronGeometry(Math.random() * 2 + 1, 0) :
                 new THREE.TorusGeometry(Math.random() * 3 + 2, 0.02, 16, 100)
@@ -172,7 +172,7 @@ const ThreeBackground = () => {
         const networkLines = new THREE.LineSegments(lineGeometry, lineMaterial)
         scene.add(networkLines)
 
-        // 5. Floating Glass Planes (Advanced Light Theme)
+        // 5. Floating Glass Planes (Advanced Light Theme) - OPTIMIZED
         const planes = []
         const planeMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xffffff,
@@ -184,7 +184,7 @@ const ThreeBackground = () => {
             thickness: 0.5,
             ior: 1.5
         })
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 3; i++) { // Reduced from 6 to 3
             const geom = new THREE.PlaneGeometry(10, 10)
             const mesh = new THREE.Mesh(geom, planeMaterial)
             mesh.position.set(
@@ -228,12 +228,14 @@ const ThreeBackground = () => {
         }
         window.addEventListener('mousemove', handleMouseMove)
 
-        // Animation loop
+        // Animation loop - OPTIMIZED
         let time = 0
+        let frameCount = 0 // For throttling expensive operations
         let animationId
         const animate = () => {
             animationId = requestAnimationFrame(animate)
             time += 0.001
+            frameCount++
 
             starField.rotation.y += 0.0001
             nebula.rotation.y += 0.0003
@@ -254,15 +256,16 @@ const ThreeBackground = () => {
                 })
             }
 
-            // Network Lines Logic (Light Mode)
-            if (isLight) {
+            // Network Lines Logic (Light Mode) - THROTTLED for performance
+            // Only update every 3 frames to reduce CPU load
+            if (isLight && frameCount % 3 === 0) {
                 const positions = nebulaGeometry.attributes.position.array
                 let lineIdx = 0
                 const maxDist = 8
 
-                // Sample some particles to connect for performance
-                for (let i = 0; i < 150; i += 3) {
-                    for (let j = i + 3; j < 300; j += 3) {
+                // Reduced sample size for better performance
+                for (let i = 0; i < 100; i += 3) { // Reduced from 150
+                    for (let j = i + 3; j < 200; j += 3) { // Reduced from 300
                         const dx = positions[i] - positions[j]
                         const dy = positions[i + 1] - positions[j + 1]
                         const dz = positions[i + 2] - positions[j + 2]
@@ -280,7 +283,7 @@ const ThreeBackground = () => {
                 }
                 lineGeometry.attributes.position.needsUpdate = true
                 lineMaterial.opacity = 0.15
-            } else {
+            } else if (!isLight) {
                 lineMaterial.opacity = 0
             }
 
