@@ -87,6 +87,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-input"
                                 placeholder="Enter your full name"
+                                autoComplete="name"
                                 required
                             />
                         </div>
@@ -104,6 +105,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-input"
                                 placeholder="your.email@example.com"
+                                autoComplete="email"
                                 required
                             />
                         </div>
@@ -121,6 +123,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-input"
                                 placeholder="+91 1234567890"
+                                autoComplete="tel"
                                 required
                             />
                         </div>
@@ -138,6 +141,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-input"
                                 placeholder="City, State"
+                                autoComplete="address-level2"
                                 required
                             />
                         </div>
@@ -198,6 +202,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-input"
                                 placeholder="Create a strong password"
+                                autoComplete="new-password"
                                 required
                             />
                         </div>
@@ -215,6 +220,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-input"
                                 placeholder="Confirm your password"
+                                autoComplete="new-password"
                                 required
                             />
                         </div>
