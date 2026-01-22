@@ -33,7 +33,7 @@ class Settings(BaseSettings):
         return v
     
     # Database
-    DATABASE_URL: str = "postgresql://postgres:password@localhost:5432/community_ai"
+    DATABASE_URL: str = "sqlite:///./community_ai.db"
     
     # AI API Keys
     GROQ_API_KEY: str = ""
