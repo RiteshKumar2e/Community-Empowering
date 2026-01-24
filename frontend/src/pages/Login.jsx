@@ -4,6 +4,7 @@ import { GoogleLogin } from '@react-oauth/google'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import { Mail, Lock, AlertCircle, Loader } from 'lucide-react'
+
 import '../styles/Auth.css'
 
 const Login = () => {
@@ -40,15 +41,13 @@ const Login = () => {
 
     const handleGoogleSuccess = async (credentialResponse) => {
         setError('')
-        setLoading(true)
-
+        // Don't set loading to true here - let the redirect happen naturally
+        // This makes the process feel faster
         const result = await googleLogin(credentialResponse.credential)
 
         if (!result.success) {
             setError(result.error)
         }
-
-        setLoading(false)
     }
 
     const handleGoogleError = () => {
@@ -133,9 +132,13 @@ const Login = () => {
                             <GoogleLogin
                                 onSuccess={handleGoogleSuccess}
                                 onError={handleGoogleError}
-                                theme="filled_blue"
+                                theme="outline"
                                 size="large"
                                 text="signin_with"
+                                width="400"
+                                logo_alignment="left"
+                                useOneTap={false}
+                                auto_select={false}
                             />
                         </div>
                     </form>
