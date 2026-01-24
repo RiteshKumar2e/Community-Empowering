@@ -476,4 +476,35 @@
     .btn:active {
         transform: scale(0.96) !important;
     }
+
+    /* Light Theme Overrides for Mobile Menu */
+    body.light-theme .full-screen-menu {
+        background: rgba(255, 255, 255, 0.98) !important;
+        backdrop-filter: blur(30px) !important;
+    }
+
+    body.light-theme .mobile-menu-header {
+        border-bottom-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    body.light-theme .mobile-menu-header .logo-text {
+        color: var(--primary-600) !important;
+    }
+
+    body.light-theme .mobile-link {
+        color: var(--text-primary) !important;
+        border-bottom-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    body.light-theme .mobile-link:active {
+        background: rgba(0, 0, 0, 0.02) !important;
+    }
+
+    body.light-theme .mobile-user-info {
+        border-bottom-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    body.light-theme .user-name-large {
+        color: var(--text-primary) !important;
+    }
 }
