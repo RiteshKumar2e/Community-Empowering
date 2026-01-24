@@ -27,6 +27,14 @@ const Navbar = () => {
                     </Link>
                     <div className="navbar-actions">
                         <ThemeToggle />
+                        <div className="user-menu-container">
+                            <Link to="/login" className="btn-signin">
+                                Sign In
+                            </Link>
+                            <Link to="/admin-login" className="btn-admin">
+                                Admin Login
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -190,10 +198,10 @@ const Navbar = () => {
                             <button onClick={() => scrollToSection('goals')} className="mobile-link">Goals</button>
                             <button onClick={() => scrollToSection('testimonials')} className="mobile-link">Testimonials</button>
                             <button onClick={() => scrollToSection('contact')} className="mobile-link">Contact</button>
-                            <Link to="/login" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                            <Link to="/login" className="mobile-link btn-signin-mobile" onClick={() => setMobileMenuOpen(false)}>
                                 Sign In
                             </Link>
-                            <Link to="/admin-login" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                            <Link to="/admin-login" className="mobile-link btn-admin-mobile" onClick={() => setMobileMenuOpen(false)}>
                                 Admin Login
                             </Link>
                         </>

@@ -47,8 +47,11 @@
 
     .btn-signin,
     .btn-admin {
-        display: none !important;
-        /* Hide on mobile navbar, show in mobile menu */
+        padding: var(--space-2) var(--space-3) !important;
+        font-size: 0.75rem !important;
+        height: 32px !important;
+        min-width: unset !important;
+        border-radius: 50px !important;
     }
 
     .mobile-menu-btn {
@@ -313,5 +316,25 @@
 
     .btn:active {
         transform: scale(0.96) !important;
+    }
+
+    /* Mobile Menu Action Buttons Styling */
+    .btn-signin-mobile {
+        background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+        color: white !important;
+        justify-content: center !important;
+        font-weight: 600 !important;
+        margin-top: var(--space-4) !important;
+        border-radius: var(--radius-lg) !important;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2) !important;
+    }
+
+    .btn-admin-mobile {
+        background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+        color: white !important;
+        justify-content: center !important;
+        font-weight: 600 !important;
+        border-radius: var(--radius-lg) !important;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2) !important;
     }
 }
