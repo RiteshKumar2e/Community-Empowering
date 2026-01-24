@@ -27,14 +27,6 @@ const Navbar = () => {
                     </Link>
                     <div className="navbar-actions">
                         <ThemeToggle />
-                        <div className="user-menu-container">
-                            <Link to="/login" className="btn-signin">
-                                Sign In
-                            </Link>
-                            <Link to="/admin-login" className="btn-admin">
-                                Admin Login
-                            </Link>
-                        </div>
                     </div>
                 </div>
             </nav>
