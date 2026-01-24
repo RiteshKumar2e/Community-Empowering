@@ -97,29 +97,31 @@ const Navbar = () => {
                 </div>
 
                 {/* Right Side Actions */}
-                <div className="navbar-actions hide-mobile">
+                <div className="navbar-actions">
                     <ThemeToggle />
-                    {isAuthenticated ? (
-                        <div className="user-menu">
-                            <Link to="/profile" className="btn btn-ghost btn-sm">
-                                <User size={18} />
-                                {user?.name}
-                            </Link>
-                            <button onClick={logout} className="btn btn-outline btn-sm">
-                                <LogOut size={18} />
-                                Logout
-                            </button>
-                        </div>
-                    ) : (
-                        <>
-                            <Link to="/login" className="btn-signin">
-                                Sign In
-                            </Link>
-                            <Link to="/admin-login" className="btn-admin">
-                                Admin Login
-                            </Link>
-                        </>
-                    )}
+                    <div className="hide-mobile user-menu-container">
+                        {isAuthenticated ? (
+                            <div className="user-menu">
+                                <Link to="/profile" className="btn btn-ghost btn-sm">
+                                    <User size={18} />
+                                    {user?.name}
+                                </Link>
+                                <button onClick={logout} className="btn btn-outline btn-sm">
+                                    <LogOut size={18} />
+                                    Logout
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <Link to="/login" className="btn-signin">
+                                    Sign In
+                                </Link>
+                                <Link to="/admin-login" className="btn-admin">
+                                    Admin Login
+                                </Link>
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 {/* Mobile Menu Button */}

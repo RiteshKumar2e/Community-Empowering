@@ -129,35 +129,7 @@ body.light-theme .navbar {
     margin-right: -140px;
 }
 
-.theme-toggle {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all var(--transition-base);
-    margin-right: -130px;
-}
-
-body.light-theme .theme-toggle {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.1);
-    color: var(--text-primary);
-}
-
-.theme-toggle:hover {
-    background: var(--bg-hover);
-    transform: rotate(15deg) scale(1.1);
-}
-
-.theme-icon {
-    filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.5));
-}
+/* Theme toggle styles moved to ThemeToggle.css */
 
 
 
