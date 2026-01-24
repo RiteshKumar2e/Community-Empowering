@@ -195,17 +195,28 @@ body.light-theme .navbar {
 /* Mobile Menu Button */
 .mobile-menu-btn {
     display: none;
-    background: transparent;
-    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
     cursor: pointer;
-    padding: var(--space-2);
-    border-radius: var(--radius-md);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all var(--transition-base);
+    backdrop-filter: blur(10px);
 }
 
 .mobile-menu-btn:hover {
     background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.light-theme .mobile-menu-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Mobile Menu */
