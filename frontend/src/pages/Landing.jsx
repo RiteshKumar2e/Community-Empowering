@@ -407,8 +407,36 @@ const Landing = () => {
 
 
 
+            {/* Team Section */}
+            <section id="team" className="team-section">
+                <div className="container">
+                    <div className="section-header">
+                        <h2>Our Team</h2>
+                        <p>The dedicated innovators behind Community AI</p>
+                    </div>
+
+                    <div className="team-grid">
+                        <div className="team-card">
+                            <div className="author-avatar" style={{ width: '80px', height: '80px', margin: '0 auto var(--space-4)', fontSize: '2rem' }}>AN</div>
+                            <h3>Anmol S.</h3>
+                            <p>Lead AI Architect</p>
+                        </div>
+                        <div className="team-card">
+                            <div className="author-avatar" style={{ width: '80px', height: '80px', margin: '0 auto var(--space-4)', fontSize: '2rem' }}>RK</div>
+                            <h3>Ritesh K.</h3>
+                            <p>Community Outreach</p>
+                        </div>
+                        <div className="team-card">
+                            <div className="author-avatar" style={{ width: '80px', height: '80px', margin: '0 auto var(--space-4)', fontSize: '2rem' }}>PS</div>
+                            <h3>Priya S.</h3>
+                            <p>UX Design Lead</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* How It Works */}
-            <section className="how-it-works">
+            <section id="how-it-works" className="how-it-works">
                 <div className="container">
                     <div className="section-header">
                         <h2>How It Works</h2>

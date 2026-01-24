@@ -162,50 +162,64 @@ const Navbar = () => {
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-                <div className="mobile-menu hide-desktop">
-                    {isAuthenticated ? (
-                        <>
-                            <Link to="/dashboard" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                                Dashboard
-                            </Link>
-                            <Link to="/assistant" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                                AI Assistant
-                            </Link>
-                            <Link to="/resources" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                                Resources
-                            </Link>
-                            <Link to="/learning" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                                Learning
-                            </Link>
-                            <Link to="/profile" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                                Profile
-                            </Link>
-                            {isAdmin && (
-                                <Link to="/admin" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                                    <Shield size={16} />
-                                    Admin Panel
-                                </Link>
-                            )}
-                            <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="mobile-link">
-                                Logout
+                <div className="mobile-menu hide-desktop full-screen-menu">
+                    <div className="mobile-menu-header">
+                        <div className="navbar-logo">
+                            <div className="logo-icon">🌟</div>
+                            <span className="logo-text">Community AI</span>
+                        </div>
+                        <div className="mobile-menu-controls">
+                            <ThemeToggle />
+                            <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(false)}>
+                                <X size={24} />
                             </button>
-                        </>
-                    ) : (
-                        <>
-                            <button onClick={() => scrollToSection('home')} className="mobile-link">Home</button>
-                            <button onClick={() => scrollToSection('mission')} className="mobile-link">Mission</button>
-                            <button onClick={() => scrollToSection('about')} className="mobile-link">About</button>
-                            <button onClick={() => scrollToSection('goals')} className="mobile-link">Goals</button>
-                            <button onClick={() => scrollToSection('testimonials')} className="mobile-link">Testimonials</button>
-                            <button onClick={() => scrollToSection('contact')} className="mobile-link">Contact</button>
-                            <Link to="/login" className="mobile-link btn-signin-mobile" onClick={() => setMobileMenuOpen(false)}>
-                                Sign In
-                            </Link>
-                            <Link to="/admin-login" className="mobile-link btn-admin-mobile" onClick={() => setMobileMenuOpen(false)}>
-                                Admin Login
-                            </Link>
-                        </>
-                    )}
+                        </div>
+                    </div>
+
+                    <div className="mobile-menu-content">
+                        {isAuthenticated ? (
+                            <>
+                                <div className="mobile-user-info">
+                                    <div className="user-avatar-large">
+                                        <User size={32} />
+                                    </div>
+                                    <span className="user-name-large">{user?.name}</span>
+                                </div>
+                                <Link to="/dashboard" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+                                <Link to="/assistant" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>AI Assistant</Link>
+                                <Link to="/resources" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Resources</Link>
+                                <Link to="/learning" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Learning</Link>
+                                <Link to="/profile" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Profile</Link>
+                                {isAdmin && (
+                                    <Link to="/admin" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Admin Panel</Link>
+                                )}
+                                <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="mobile-link logout-link">
+                                    <LogOut size={20} /> Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <div className="mobile-auth-actions">
+                                    <Link to="/login" className="mobile-auth-btn btn-signin-mobile" onClick={() => setMobileMenuOpen(false)}>
+                                        Sign In
+                                    </Link>
+                                    <Link to="/admin-login" className="mobile-auth-btn btn-admin-mobile" onClick={() => setMobileMenuOpen(false)}>
+                                        Admin Login
+                                    </Link>
+                                </div>
+
+                                <div className="mobile-nav-links">
+                                    <button onClick={() => scrollToSection('home')} className="mobile-link">Home</button>
+                                    <button onClick={() => scrollToSection('mission')} className="mobile-link">Mission</button>
+                                    <button onClick={() => scrollToSection('about')} className="mobile-link">About</button>
+                                    <button onClick={() => scrollToSection('goals')} className="mobile-link">Goals</button>
+                                    <button onClick={() => scrollToSection('team')} className="mobile-link">Team</button>
+                                    <button onClick={() => scrollToSection('testimonials')} className="mobile-link">Testimonials</button>
+                                    <button onClick={() => scrollToSection('contact')} className="mobile-link">Contact</button>
+                                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
             )}
         </nav>
