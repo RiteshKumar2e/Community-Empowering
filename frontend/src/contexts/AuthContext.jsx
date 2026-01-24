@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
             setUser(userData)
-            navigate('/home')
+            navigate('/dashboard')
 
             return { success: true }
         } catch (error) {
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
             setUser(newUser)
-            navigate('/home')
+            navigate('/dashboard')
 
             return { success: true }
         } catch (error) {
@@ -90,7 +90,7 @@ export const AuthProvider = ({ children }) => {
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
             setUser(userData)
-            navigate('/home')
+            navigate('/dashboard')
 
             return { success: true }
         } catch (error) {
