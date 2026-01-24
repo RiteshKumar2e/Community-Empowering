@@ -3,14 +3,20 @@ import { Sun, Moon } from 'lucide-react'
 
 const ThemeToggle = () => {
     const [isLight, setIsLight] = useState(() => {
-        return document.body.classList.contains('light-theme')
+        const savedTheme = localStorage.getItem('theme')
+        if (savedTheme) {
+            return savedTheme === 'light'
+        }
+        return true // Default to light theme
     })
 
     useEffect(() => {
         if (isLight) {
             document.body.classList.add('light-theme')
+            localStorage.setItem('theme', 'light')
         } else {
             document.body.classList.remove('light-theme')
+            localStorage.setItem('theme', 'dark')
         }
     }, [isLight])
 

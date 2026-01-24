@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import { ArrowRight, MessageSquare, BookOpen, Search, Mic, Globe, Zap, Target, Heart, Award, CheckCircle, Star, ArrowUp, Github, Linkedin, Mail } from 'lucide-react'
 import ThreeBackground from '../components/ThreeBackground'
@@ -9,6 +10,8 @@ import '../styles/Cursor.css'
 import '../styles/MiniFeatures.css'
 
 const Landing = () => {
+    const { isAuthenticated } = useAuth()
+    const navigate = useNavigate()
     const { t } = useLanguage()
     const [selectedFeature, setSelectedFeature] = useState(null)
     const [showScrollTop, setShowScrollTop] = useState(false)
@@ -222,14 +225,23 @@ const Landing = () => {
                         </p>
 
                         <div className="hero-actions">
-                            <button onClick={() => scrollToSection('features')} className="btn btn-explore">
-                                Explore Solutions
-                                <ArrowRight size={20} />
-                            </button>
-                            <button onClick={() => scrollToSection('about')} className="btn btn-learn">
-                                Learn More
-                                <ArrowRight size={20} />
-                            </button>
+                            {isAuthenticated ? (
+                                <button onClick={() => navigate('/dashboard')} className="btn btn-explore" style={{ background: 'var(--primary-500)', border: 'none' }}>
+                                    Dashboard
+                                    <ArrowRight size={20} />
+                                </button>
+                            ) : (
+                                <>
+                                    <button onClick={() => scrollToSection('features')} className="btn btn-explore">
+                                        Explore Solutions
+                                        <ArrowRight size={20} />
+                                    </button>
+                                    <button onClick={() => scrollToSection('about')} className="btn btn-learn">
+                                        Learn More
+                                        <ArrowRight size={20} />
+                                    </button>
+                                </>
+                            )}
                         </div>
 
                     </div>
