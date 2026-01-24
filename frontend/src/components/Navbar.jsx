@@ -14,6 +14,25 @@ const Navbar = () => {
     const isActive = (path) => location.pathname === path
     const isAdmin = user?.email === 'riteshkumar90359@gmail.com'
 
+    // Simplified view for Auth pages
+    const isAuthPage = ['/login', '/register', '/admin-login'].includes(location.pathname)
+
+    if (isAuthPage) {
+        return (
+            <nav className="navbar">
+                <div className="container navbar-container">
+                    <Link to="/" className="navbar-logo" style={{ marginLeft: 0 }}>
+                        <div className="logo-icon">🌟</div>
+                        <span className="logo-text">Community AI</span>
+                    </Link>
+                    <div className="navbar-actions">
+                        <ThemeToggle />
+                    </div>
+                </div>
+            </nav>
+        )
+    }
+
     const scrollToSection = (sectionId) => {
         if (location.pathname !== '/') {
             navigate('/')
