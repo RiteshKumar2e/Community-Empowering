@@ -21,7 +21,7 @@ const Navbar = () => {
         return (
             <nav className="navbar">
                 <div className="container navbar-container">
-                    <Link to="/" className="navbar-logo" style={{ marginLeft: 0 }}>
+                    <Link to="/" className="navbar-logo">
                         <div className="logo-icon">🌟</div>
                         <span className="logo-text">Community AI</span>
                     </Link>
